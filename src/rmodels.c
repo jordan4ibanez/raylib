@@ -1201,8 +1201,12 @@ bool IsModelValid(Model model)
         if ((model.meshes[i].texcoords2 != NULL) && (model.meshes[i].vboId[5] == 0)) { result = false; break; } // Vertex texcoords2 buffer not uploaded to GPU
         if ((model.meshes[i].indices != NULL) && (model.meshes[i].vboId[6] == 0)) { result = false; break; }    // Vertex indices buffer not uploaded to GPU
 #if SUPPORT_GPU_SKINNING
-        if ((model.meshes[i].boneIndices != NULL) && (model.meshes[i].vboId[7] == 0)) { result = false; break; } // Vertex boneIndices buffer not uploaded to GPU
-        if ((model.meshes[i].boneWeights != NULL) && (model.meshes[i].vboId[8] == 0)) { result = false; break; } // Vertex boneWeights buffer not uploaded to GPU
+        bool isGpuSkinning = (model.meshes[i].vboId[7] != 0) || (model.meshes[i].vboId[8] != 0);
+        if (isGpuSkinning)
+        {
+            if ((model.meshes[i].boneIndices != NULL) && (model.meshes[i].vboId[7] == 0)) { result = false; break; } // Vertex boneIndices buffer not uploaded to GPU
+            if ((model.meshes[i].boneWeights != NULL) && (model.meshes[i].vboId[8] == 0)) { result = false; break; } // Vertex boneWeights buffer not uploaded to GPU
+        }
 #endif
         // NOTE: Some OpenGL versions do not support VAO, so avoid below check
         //if (model.meshes[i].vaoId == 0) { result = false; break }
